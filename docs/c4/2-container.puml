@@ -1,0 +1,34 @@
+' Level 2: Container diagram
+@startuml C4_Container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Container diagram for Order System
+
+Person(customer, "Customer", "A user of the order system")
+
+System_Boundary(c1, "Order System") {
+    Container(apiGateway, "API Gateway", "NGINX", "Routes requests to appropriate services")
+    Container(restApi, "REST API", "Go", "Handles REST requests on port 8080")
+    Container(grpcServer, "gRPC Server", "Go", "Handles gRPC communication on port 50051")
+    Container(graphqlApi, "GraphQL API", "Go", "Handles GraphQL queries on port 8081")
+    ContainerDb(db, "Database", "PostgreSQL", "Stores order information")
+}
+
+System_Ext(mobileApp, "Mobile App", "Mobile application")
+System_Ext(webApp, "Web Application", "Web interface")
+System_Ext(microservice, "Other Microservices", "Internal company services")
+
+Rel(customer, webApp, "Uses", "HTTPS")
+Rel(customer, mobileApp, "Uses", "HTTPS")
+Rel(webApp, apiGateway, "Uses", "HTTPS")
+Rel(mobileApp, apiGateway, "Uses", "HTTPS")
+Rel(microservice, grpcServer, "Uses", "gRPC")
+
+Rel(apiGateway, restApi, "Routes to", "HTTP")
+Rel(apiGateway, graphqlApi, "Routes to", "HTTP")
+
+Rel(restApi, db, "Reads/Writes", "SQL")
+Rel(grpcServer, db, "Reads/Writes", "SQL")
+Rel(graphqlApi, db, "Reads/Writes", "SQL")
+
+@enduml

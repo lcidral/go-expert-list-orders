@@ -1,0 +1,34 @@
+' Importar bibliotecas C4-PlantUML
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+' Configurações gerais
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/go.puml
+!include DEVICONS/postgresql.puml
+
+' Level 1: System Context diagram
+@startuml C4_Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title System Context diagram for Order System
+
+Person(customer, "Customer", "A user of the order system")
+System(orderSystem, "Order System", "Allows users to view and manage orders")
+System_Ext(mobileApp, "Mobile App", "Mobile application")
+System_Ext(webApp, "Web Application", "Web interface")
+System_Ext(microservice, "Other Microservices", "Internal company services")
+
+Rel(customer, webApp, "Uses", "HTTPS")
+Rel(customer, mobileApp, "Uses", "HTTPS")
+Rel(webApp, orderSystem, "Uses", "REST/GraphQL")
+Rel(mobileApp, orderSystem, "Uses", "REST/GraphQL")
+Rel(microservice, orderSystem, "Uses", "gRPC")
+
+@enduml
+
+
+
+

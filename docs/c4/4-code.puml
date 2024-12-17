@@ -1,0 +1,36 @@
+' Level 4: Code
+@startuml C4_Code
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Class diagram for Order Service
+
+class Order {
+    +ID: string
+    +CustomerID: string
+    +Status: string
+    +TotalAmount: float64
+    +CreatedAt: time.Time
+    +UpdatedAt: time.Time
+}
+
+interface OrderRepository {
+    +List(): []Order
+    +Create(Order): error
+}
+
+class ListOrdersUseCase {
+    -repo: OrderRepository
+    +Execute(): []Order
+}
+
+class PostgresOrderRepository {
+    -db: *sql.DB
+    +List(): []Order
+    +Create(Order): error
+}
+
+OrderRepository <|.. PostgresOrderRepository
+ListOrdersUseCase --> OrderRepository
+PostgresOrderRepository --> Order
+
+@enduml

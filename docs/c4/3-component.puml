@@ -1,0 +1,28 @@
+' Level 3: Component diagram
+@startuml C4_Components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Component diagram for Order Service
+
+Container_Boundary(api, "Order Service") {
+    Component(restHandler, "REST Handler", "Go", "Handles REST endpoints")
+    Component(grpcService, "gRPC Service", "Go", "Handles gRPC communication")
+    Component(graphqlResolver, "GraphQL Resolver", "Go", "Resolves GraphQL queries")
+
+    Component(listOrdersUC, "List Orders Use Case", "Go", "Business logic for listing orders")
+    Component(orderRepo, "Order Repository", "Interface", "Repository interface for orders")
+
+    Component(postgresRepo, "PostgreSQL Repository", "Go", "PostgreSQL implementation")
+}
+
+ContainerDb(db, "Database", "PostgreSQL", "Stores order information")
+
+Rel(restHandler, listOrdersUC, "Uses")
+Rel(grpcService, listOrdersUC, "Uses")
+Rel(graphqlResolver, listOrdersUC, "Uses")
+
+Rel(listOrdersUC, orderRepo, "Uses")
+Rel(postgresRepo, orderRepo, "Implements")
+Rel(postgresRepo, db, "Reads/Writes", "SQL")
+
+@enduml
